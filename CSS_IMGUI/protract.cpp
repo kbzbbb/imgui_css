@@ -42,6 +42,8 @@ void protract::protract_pane(float x, float y, float w, float h, ImColor color, 
 
 void protract::cheatDraw(HWND hwnd)
 {
+	protract::Get_data();
+
 	int Gamer_quantity = 0;
 	uintptr_t list_head = data::module + 0x4F615C;
 	uintptr_t w_head = 0x0;
@@ -55,7 +57,6 @@ void protract::cheatDraw(HWND hwnd)
 	float Matrix[4][4];
 	RECT RectGame;
 
-	protract::Get_data();
 	getGameRect(RectGame);
 	::SetWindowPos(hwnd, HWND_TOPMOST, RectGame.left, RectGame.top, RectGame.right - RectGame.left, RectGame.bottom - RectGame.top, SWP_SHOWWINDOW);
 	::SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
