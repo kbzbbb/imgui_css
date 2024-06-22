@@ -75,7 +75,8 @@ void protract::cheatDraw(HWND hwnd)
 		repeat = read_memory<int>(list_head + i * 0x10);
 		figure_data.life = read_memory<int>(repeat + 0xe4);
 		figure_data.camp = read_memory<int>(repeat + 0x1F4);
-		if(figure_data.life == 1 || figure_data.camp == W.camp) continue;
+		if(figure_data.life == 1) continue;
+		//if(figure_data.camp == W.camp) continue;
 		figure_data.x = read_memory<float>(repeat + 0x308);
 		figure_data.y = read_memory<float>(repeat + 0x30C);
 		figure_data.z = read_memory<float>(repeat + 0x310);
@@ -100,7 +101,31 @@ void protract::cheatDraw(HWND hwnd)
 			Sc_x -= BoxWidth / 2;
 			Sc_head -= 0.0F;
 
-			protract_pane(Sc_x, Sc_head, BoxWidth, BoxHeight, ImColor(255, 0, 0, 255), 1.0f);
+			//if (figure_data.camp != W.camp) {
+			//	ImGui::GetForegroundDrawList()->AddLine(ImVec2(ViewWidth, 0), ImVec2(Sc_x + BoxWidth / 2, Sc_head), ImColor(0, 0, 255, 255), 1.0f);
+			//}
+
+			protract_pane(Sc_x, Sc_head, BoxWidth, BoxHeight, ImColor(0, 255, 0, 255), 1.0f);
+			if (figure_data.camp == W.camp) {
+				protract_pane(Sc_x, Sc_head, BoxWidth, BoxHeight, ImColor(255, 0, 255, 255), 1.0f);
+			}
+
+			float hpPercentage = figure_data.life / 100.0f;
+			ImGui::GetForegroundDrawList()->AddLine(ImVec2(Sc_x, Sc_head), ImVec2(Sc_x, Sc_head + BoxHeight * hpPercentage), ImColor(255, 0, 0, 255), 2.0f);
+
+			ImGui::GetForegroundDrawList()->AddCircle(ImVec2(ViewWidth, ViewHeight), 100.0f, ImColor(255, 0, 0, 255),0,1.0f);
+
+			ImGui::GetForegroundDrawList()->AddCircle(ImVec2(ViewWidth, ViewHeight), 1.0f, ImColor(255, 0, 0, 255), 0, 1.0f);
+
+			float distance1 = (Sc_x + BoxWidth / 2) - ViewWidth;
+			float distance2 = Sc_head - ViewHeight;
+			float distance = abs(sqrt(pow(distance1, 2) + pow(distance2, 2)));
+
+			if (distance < 100.0f) {
+				if (figure_data.camp != W.camp) {
+					ImGui::GetForegroundDrawList()->AddLine(ImVec2(ViewWidth, ViewHeight), ImVec2(Sc_x + BoxWidth / 2, Sc_head), ImColor(0, 0, 255, 255), 1.0f);
+				}
+			}
 		}
 	}
 }
